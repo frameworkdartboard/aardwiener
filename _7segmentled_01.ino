@@ -1,3 +1,8 @@
+/* _7segmentled_01
+   1.0: Driving the right digit of a 2-digit 7-segment led common anode display.
+   1.1: Now going to try shutting off the display once in a while with an NPN transistor.
+*/
+
 byte seven_seg_digits[10][7] = {
   {0,0,0,0,0,0,1}, // = 0
   {1,0,0,1,1,1,1}, // = 1
@@ -19,6 +24,8 @@ void setup() {
   pinMode(6, OUTPUT);
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
+  pinMode(9, OUTPUT); // transistor control
+  digitalWrite(9, HIGH); // i want it high right away
 }
 
 void sevenSegWrite(byte digit) {
@@ -32,6 +39,12 @@ void sevenSegWrite(byte digit) {
 void loop() {
   for (byte count = 10; count > 0; --count) {
     delay(1000);
+    // i wonder if i'll see odd numbers or even numbers because of this trick?
+    if (count % 2 == 0) {
+      digitalWrite(9, LOW);
+    } else {
+      digitalWrite(9, HIGH);
+    }
     sevenSegWrite(count - 1);
   }
   delay(3000);
